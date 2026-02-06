@@ -167,13 +167,8 @@ const App = () => {
         ))}
       </div>
 
-      {/* Header */}
-      <header className="p-10 md:p-20 flex justify-between items-start z-10">
-        <div className="flex flex-col group cursor-default">
-          <h1 className="serif text-4xl md:text-5xl tracking-[.4em] uppercase font-light">Ibiza</h1>
-          <span className="text-[10px] tracking-[.8em] text-yellow-500 font-bold mt-4 uppercase opacity-80">Total Solar</span>
-        </div>
-        
+      {/* Header - Logo removed from left, button remains on right */}
+      <header className="p-10 md:p-20 flex justify-end items-start z-10">
         <button 
           onClick={() => setPlaying(!playing)} 
           className="w-16 h-16 md:w-20 md:h-20 rounded-full border border-white/5 bg-white/[0.03] backdrop-blur-2xl flex items-center justify-center hover:bg-white/[0.1] transition-all duration-1000 active:scale-95 group shadow-2xl"
