@@ -32,24 +32,24 @@ const EclipseVisual = ({ progress }: { progress: number }) => {
   const isNear = progress > 0.38 && progress < 0.62;
   
   return (
-    <div className="relative w-72 h-72 md:w-[460px] md:h-[460px] flex items-center justify-center pointer-events-none transition-transform duration-[1800ms] cubic-bezier(0.2, 0.8, 0.2, 1)">
+    <div className="relative w-56 h-56 md:w-[380px] md:h-[380px] flex items-center justify-center pointer-events-none transition-transform duration-[1800ms] cubic-bezier(0.2, 0.8, 0.2, 1)">
       {/* Atmosphere / Corona */}
       <div 
         className="absolute w-full h-full rounded-full transition-all duration-[2500ms] cubic-bezier(0.2, 0.8, 0.2, 1)"
         style={{ 
           background: isNear ? 'radial-gradient(circle, #fff 0%, #FFD700 25%, transparent 65%)' : 'transparent',
-          filter: `blur(${isTotality ? '90px' : '25px'})`,
+          filter: `blur(${isTotality ? '70px' : '20px'})`,
           opacity: isNear ? (isTotality ? 1 : 0.3) : 0,
-          transform: `scale(${isTotality ? 2.8 : 0.85})`
+          transform: `scale(${isTotality ? 2.5 : 0.8})`
         }}
       />
       
       {/* The Sun Core */}
-      <div className={`absolute w-44 h-44 md:w-60 md:h-60 rounded-full bg-white transition-all duration-[2200ms] cubic-bezier(0.2, 0.8, 0.2, 1) ${isTotality ? 'totality-glow shadow-[0_0_100px_#fff]' : 'shadow-[0_0_40px_rgba(255,255,255,0.2)]'}`} />
+      <div className={`absolute w-32 h-32 md:w-52 md:h-52 rounded-full bg-white transition-all duration-[2200ms] cubic-bezier(0.2, 0.8, 0.2, 1) ${isTotality ? 'totality-glow shadow-[0_0_80px_#fff]' : 'shadow-[0_0_30px_rgba(255,255,255,0.15)]'}`} />
       
       {/* The Moon Shadow */}
       <div 
-        className="absolute w-44 h-44 md:w-60 md:h-60 rounded-full bg-black border border-white/5 transition-transform duration-[600ms] cubic-bezier(0.2, 0.8, 0.2, 1)" 
+        className="absolute w-32 h-32 md:w-52 md:h-52 rounded-full bg-black border border-white/5 transition-transform duration-[600ms] cubic-bezier(0.2, 0.8, 0.2, 1)" 
         style={{ transform: `translateX(${moonOffset}%)` }} 
       />
     </div>
@@ -85,7 +85,6 @@ const App = () => {
 
       if (playing) {
         const proximity = Math.abs(0.5 - progress);
-        // Precise celestial speed adjustment
         const speedMultiplier = proximity < 0.01 ? 0.15 : (proximity < 0.12 ? 0.45 : 1.0);
         const baseSpeed = 0.000032; 
         
@@ -150,7 +149,7 @@ const App = () => {
     <div className="h-screen w-full flex flex-col justify-between overflow-hidden relative bg-black select-none font-light text-white tracking-widest">
       
       {/* Celestial Background */}
-      <div className="absolute inset-0 z-0 opacity-40">
+      <div className="absolute inset-0 z-0 opacity-30">
         {stars.map((s, i) => (
           <div 
             key={i} 
@@ -167,64 +166,64 @@ const App = () => {
         ))}
       </div>
 
-      {/* Header - Logo removed from left, button remains on right */}
-      <header className="p-10 md:p-20 flex justify-end items-start z-10">
+      {/* Header - Scaled down for 16:9 feel */}
+      <header className="p-6 md:p-10 flex justify-end items-start z-10">
         <button 
           onClick={() => setPlaying(!playing)} 
-          className="w-16 h-16 md:w-20 md:h-20 rounded-full border border-white/5 bg-white/[0.03] backdrop-blur-2xl flex items-center justify-center hover:bg-white/[0.1] transition-all duration-1000 active:scale-95 group shadow-2xl"
+          className="w-12 h-12 md:w-16 md:h-16 rounded-full border border-white/5 bg-white/[0.03] backdrop-blur-2xl flex items-center justify-center hover:bg-white/[0.1] transition-all duration-1000 active:scale-95 group shadow-2xl"
           aria-label={playing ? "Pause" : "Play"}
         >
           {playing ? (
-            <div className="flex gap-2">
-              <div className="w-1 h-5 md:h-6 bg-white/40 group-hover:bg-white transition-all duration-500" />
-              <div className="w-1 h-5 md:h-6 bg-white/40 group-hover:bg-white transition-all duration-500" />
+            <div className="flex gap-1.5 md:gap-2">
+              <div className="w-1 h-4 md:h-5 bg-white/40 group-hover:bg-white transition-all duration-500" />
+              <div className="w-1 h-4 md:h-5 bg-white/40 group-hover:bg-white transition-all duration-500" />
             </div>
           ) : (
-            <div className="ml-1.5 w-0 h-0 border-y-[10px] md:border-y-[12px] border-y-transparent border-l-[20px] md:border-l-[24px] border-l-white/40 group-hover:border-l-white transition-all duration-500" />
+            <div className="ml-1 w-0 h-0 border-y-[8px] md:border-y-[10px] border-y-transparent border-l-[16px] md:border-l-[20px] border-l-white/40 group-hover:border-l-white transition-all duration-500" />
           )}
         </button>
       </header>
 
-      {/* Experience Display */}
-      <main className="flex-1 flex flex-col items-center justify-center z-10 px-10 text-center -mt-10">
-        <div className="mb-10 transform scale-90 md:scale-100">
+      {/* Experience Display - Tightened spacing */}
+      <main className="flex-1 flex flex-col items-center justify-center z-10 px-8 text-center -mt-4">
+        <div className="mb-4 transform scale-90 md:scale-100">
           <EclipseVisual progress={progress} />
         </div>
         
-        <div key={currentPhase} className="min-h-[300px] flex flex-col items-center max-w-5xl mx-auto animate-content">
-          <h2 className="serif text-3xl md:text-5xl lg:text-7xl mb-12 leading-[1.2] tracking-wide font-light text-white/95">
+        <div key={currentPhase} className="min-h-[220px] flex flex-col items-center max-w-4xl mx-auto animate-content">
+          <h2 className="serif text-2xl md:text-4xl lg:text-5xl mb-6 leading-[1.3] tracking-wide font-light text-white/95">
             {activeData?.sentence}
           </h2>
           
-          <div className="flex flex-wrap justify-center gap-4 mb-14">
+          <div className="flex flex-wrap justify-center gap-3 mb-8">
             {(activeData?.feeling || "").split(',').filter(Boolean).map((f: string, i: number) => (
-              <span key={i} className="text-[10px] uppercase tracking-[.5em] text-yellow-500/90 px-6 py-2.5 border border-yellow-500/10 rounded-full bg-white/[0.02] backdrop-blur-md">
+              <span key={i} className="text-[9px] uppercase tracking-[.4em] text-yellow-500/90 px-5 py-2 border border-yellow-500/10 rounded-full bg-white/[0.02] backdrop-blur-md">
                 {f.trim()}
               </span>
             ))}
           </div>
           
-          <p className="text-white/20 italic text-lg md:text-2xl max-w-xl border-t border-white/5 pt-12 font-light leading-relaxed">
+          <p className="text-white/20 italic text-sm md:text-xl max-w-lg border-t border-white/5 pt-6 font-light leading-relaxed">
             {activeData?.reflection}
           </p>
         </div>
       </main>
 
-      {/* Control Navigation */}
-      <footer className="p-10 md:p-24 z-10 w-full max-w-7xl mx-auto">
-        <div className="flex justify-between mb-12 overflow-x-auto no-scrollbar gap-10 px-4">
+      {/* Control Navigation - Tighter and more centered */}
+      <footer className="p-6 md:p-12 z-10 w-full max-w-6xl mx-auto">
+        <div className="flex justify-between mb-8 overflow-x-auto no-scrollbar gap-8 px-2">
           {PHASES.map((k, i) => (
             <button 
               key={k} 
               onClick={() => {setProgress(i / (PHASES.length - 1)); setPlaying(false);}} 
-              className={`text-[10px] uppercase tracking-[.4em] transition-all duration-[800ms] whitespace-nowrap ${i === currentIdx ? 'text-white font-bold scale-110' : 'text-white/10 hover:text-white/40'}`}
+              className={`text-[9px] uppercase tracking-[.3em] transition-all duration-[800ms] whitespace-nowrap ${i === currentIdx ? 'text-white font-bold scale-105' : 'text-white/10 hover:text-white/40'}`}
             >
               {PHASE_LABELS[k]}
             </button>
           ))}
         </div>
         
-        <div className="relative h-[1px] w-full bg-white/[0.1] group cursor-pointer transition-all duration-700 hover:bg-white/[0.15]">
+        <div className="relative h-[1px] w-full bg-white/[0.08] group cursor-pointer transition-all duration-700 hover:bg-white/[0.15]">
           <input 
             type="range" 
             min="0" 
@@ -232,14 +231,14 @@ const App = () => {
             step="0.000001" 
             value={progress} 
             onInput={e => {setProgress(parseFloat(e.currentTarget.value)); setPlaying(false);}} 
-            className="absolute -top-10 left-0 w-full h-20 opacity-0 z-20 cursor-pointer" 
+            className="absolute -top-6 left-0 w-full h-12 opacity-0 z-20 cursor-pointer" 
           />
           <div 
-            className="absolute h-full bg-yellow-500 transition-all duration-[1200ms] cubic-bezier(0.2, 0.8, 0.2, 1) shadow-[0_0_30px_rgba(245,158,11,0.5)]" 
+            className="absolute h-full bg-yellow-500 transition-all duration-[1200ms] cubic-bezier(0.2, 0.8, 0.2, 1) shadow-[0_0_20px_rgba(245,158,11,0.4)]" 
             style={{ width: `${progress * 100}%` }} 
           />
           <div 
-            className="absolute w-6 h-6 bg-white rounded-full top-1/2 -translate-y-1/2 -translate-x-1/2 shadow-[0_0_20px_rgba(255,255,255,0.4)] transition-all duration-700 group-hover:scale-125 group-hover:bg-yellow-500" 
+            className="absolute w-4 h-4 bg-white rounded-full top-1/2 -translate-y-1/2 -translate-x-1/2 shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-all duration-700 group-hover:scale-125 group-hover:bg-yellow-500" 
             style={{ left: `${progress * 100}%` }} 
           />
         </div>
