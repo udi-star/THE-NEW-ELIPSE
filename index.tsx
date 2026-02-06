@@ -24,33 +24,64 @@ const DEFAULT_STORY: Record<Phase, { sentence: string, feeling: string, reflecti
   afterglow: { sentence: "The shadow leaves a golden mark upon the soul.", feeling: "Presence, Awake", reflection: "How will you speak of this to the future?" }
 };
 
-// --- Sub-Components ---
+// --- Ease Out Quint for high-end feel ---
+const PREMIUM_EASE = 'cubic-bezier(0.23, 1, 0.32, 1)';
 
 const EclipseVisual = ({ progress }: { progress: number }) => {
   const moonOffset = (0.5 - progress) * 125;
-  const isTotality = progress > 0.4992 && progress < 0.5008;
-  const isNear = progress > 0.38 && progress < 0.62;
+  const isTotality = progress > 0.4994 && progress < 0.5006;
+  const isNear = progress > 0.35 && progress < 0.65;
+  
+  // Calculate a "proximity" factor for smoother opacity transitions
+  // 0 at edge of 'near', 1 at totality
+  const proximityFactor = Math.max(0, 1 - (Math.abs(0.5 - progress) / 0.15));
   
   return (
-    <div className="relative w-32 h-32 md:w-56 md:h-56 flex items-center justify-center pointer-events-none transition-transform duration-[1800ms] cubic-bezier(0.2, 0.8, 0.2, 1)">
-      {/* Atmosphere / Corona */}
+    <div 
+      className="relative w-32 h-32 md:w-56 md:h-56 flex items-center justify-center pointer-events-none transition-transform"
+      style={{ transitionDuration: '2500ms', transitionTimingFunction: PREMIUM_EASE }}
+    >
+      {/* Atmosphere / Corona - Soft, ethereal, and layered */}
       <div 
-        className="absolute w-full h-full rounded-full transition-all duration-[2500ms] cubic-bezier(0.2, 0.8, 0.2, 1)"
+        className={`absolute w-full h-full rounded-full transition-all ${isTotality ? 'corona-pulse' : ''}`}
         style={{ 
-          background: isNear ? 'radial-gradient(circle, #fff 0%, #FFD700 25%, transparent 65%)' : 'transparent',
-          filter: `blur(${isTotality ? '50px' : '15px'})`,
-          opacity: isNear ? (isTotality ? 1 : 0.3) : 0,
-          transform: `scale(${isTotality ? 2.3 : 0.8})`
+          background: isNear 
+            ? 'radial-gradient(circle, rgba(255,255,255,0.7) 0%, rgba(255,225,100,0.2) 40%, transparent 80%)' 
+            : 'transparent',
+          filter: `blur(${isTotality ? '45px' : '20px'})`,
+          opacity: isNear ? (isTotality ? 0.85 : 0.2 * proximityFactor) : 0,
+          transform: `scale(${isTotality ? 2.6 : 0.9})`,
+          transitionDuration: isTotality ? '4000ms' : '2500ms',
+          transitionTimingFunction: PREMIUM_EASE
+        }}
+      />
+
+      {/* Inner Soft Glow - Adds depth to the corona */}
+      <div 
+        className="absolute w-full h-full rounded-full transition-all"
+        style={{ 
+          background: 'radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 60%)',
+          opacity: isTotality ? 0.6 : 0,
+          transform: `scale(${isTotality ? 1.8 : 0.5})`,
+          transitionDuration: '5000ms',
+          transitionTimingFunction: PREMIUM_EASE
         }}
       />
       
-      {/* The Sun Core */}
-      <div className={`absolute w-20 h-20 md:w-36 md:h-36 rounded-full bg-white transition-all duration-[2200ms] cubic-bezier(0.2, 0.8, 0.2, 1) ${isTotality ? 'totality-glow shadow-[0_0_60px_#fff]' : 'shadow-[0_0_20px_rgba(255,255,255,0.15)]'}`} />
-      
-      {/* The Moon Shadow */}
+      {/* The Sun Core - Subtle glow */}
       <div 
-        className="absolute w-20 h-20 md:w-36 md:h-36 rounded-full bg-black border border-white/5 transition-transform duration-[600ms] cubic-bezier(0.2, 0.8, 0.2, 1)" 
-        style={{ transform: `translateX(${moonOffset}%)` }} 
+        className={`absolute w-20 h-20 md:w-36 md:h-36 rounded-full bg-white transition-all ${isTotality ? 'totality-glow shadow-[0_0_40px_rgba(255,255,255,0.4)]' : 'shadow-[0_0_15px_rgba(255,255,255,0.1)]'}`} 
+        style={{ transitionDuration: '3000ms', transitionTimingFunction: PREMIUM_EASE }}
+      />
+      
+      {/* The Moon Shadow - Weighty, deliberate motion */}
+      <div 
+        className="absolute w-20 h-20 md:w-36 md:h-36 rounded-full bg-black border border-white/5 transition-transform" 
+        style={{ 
+          transform: `translateX(${moonOffset}%)`, 
+          transitionDuration: '1400ms', 
+          transitionTimingFunction: PREMIUM_EASE 
+        }} 
       />
     </div>
   );
@@ -67,7 +98,7 @@ const App = () => {
     left: `${Math.random() * 100}%`,
     size: `${Math.random() * 1.2 + 0.3}px`,
     delay: `${Math.random() * 5}s`,
-    duration: `${4 + Math.random() * 6}s`
+    duration: `${6 + Math.random() * 8}s`
   })), []);
 
   const currentIdx = Math.min(Math.floor(progress * PHASES.length), PHASES.length - 1);
@@ -82,8 +113,8 @@ const App = () => {
 
       if (playing) {
         const proximity = Math.abs(0.5 - progress);
-        const speedMultiplier = proximity < 0.01 ? 0.15 : (proximity < 0.12 ? 0.45 : 1.0);
-        const baseSpeed = 0.000035; 
+        const speedMultiplier = proximity < 0.01 ? 0.12 : (proximity < 0.1 ? 0.4 : 1.0);
+        const baseSpeed = 0.000032; 
         setProgress(p => (p + dt * baseSpeed * speedMultiplier) % 1);
       }
       frame = requestAnimationFrame(loop);
@@ -132,7 +163,7 @@ const App = () => {
     <div className="relative w-screen h-screen bg-black overflow-hidden select-none font-light text-white tracking-widest flex flex-col justify-center">
       
       {/* Background Stars */}
-      <div className="absolute inset-0 z-0 opacity-25">
+      <div className="absolute inset-0 z-0 opacity-20">
         {stars.map((s, i) => (
           <div 
             key={i} 
@@ -149,7 +180,7 @@ const App = () => {
       <div className="absolute top-6 right-6 z-20">
         <button 
           onClick={() => setPlaying(!playing)} 
-          className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 bg-white/[0.05] backdrop-blur-xl flex items-center justify-center hover:bg-white/[0.15] transition-all"
+          className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 bg-white/[0.05] backdrop-blur-xl flex items-center justify-center hover:bg-white/[0.15] transition-all duration-700"
         >
           {playing ? (
             <div className="flex gap-1">
@@ -175,7 +206,7 @@ const App = () => {
           
           <div className="flex flex-wrap justify-center md:justify-start gap-2.5 mb-6 md:mb-8">
             {(activeData?.feeling || "").split(',').map((f, i) => (
-              <span key={i} className="text-[9px] uppercase tracking-[.3em] text-yellow-500/80 px-4 py-1.5 border border-yellow-500/10 rounded-full bg-white/[0.03] backdrop-blur-sm">
+              <span key={i} className="text-[9px] uppercase tracking-[.3em] text-yellow-500/70 px-4 py-1.5 border border-yellow-500/10 rounded-full bg-white/[0.03] backdrop-blur-sm">
                 {f.trim()}
               </span>
             ))}
@@ -194,21 +225,28 @@ const App = () => {
             <button 
               key={k} 
               onClick={() => {setProgress(i / (PHASES.length - 1)); setPlaying(false);}} 
-              className={`text-[9px] uppercase tracking-[.25em] transition-all duration-500 ${i === currentIdx ? 'text-white font-bold opacity-100' : 'text-white/20 hover:text-white/50'}`}
+              className={`text-[9px] uppercase tracking-[.25em] transition-all duration-[1200ms] ${i === currentIdx ? 'text-white font-bold opacity-100' : 'text-white/20 hover:text-white/50'}`}
+              style={{ transitionTimingFunction: PREMIUM_EASE }}
             >
               {PHASE_LABELS[k]}
             </button>
           ))}
         </div>
         
-        <div className="relative h-[1px] w-full bg-white/[0.1] group cursor-pointer transition-colors duration-500 hover:bg-white/[0.2]">
+        <div className="relative h-[1px] w-full bg-white/[0.1] group cursor-pointer transition-colors duration-[1000ms]">
           <input 
             type="range" min="0" max="1" step="0.000001" value={progress} 
             onInput={e => {setProgress(parseFloat(e.currentTarget.value)); setPlaying(false);}} 
             className="absolute -top-4 left-0 w-full h-10 opacity-0 z-20" 
           />
-          <div className="absolute h-full bg-yellow-500/70 shadow-[0_0_15px_rgba(245,158,11,0.4)]" style={{ width: `${progress * 100}%` }} />
-          <div className="absolute w-3.5 h-3.5 bg-white rounded-full top-1/2 -translate-y-1/2 -translate-x-1/2 shadow-lg" style={{ left: `${progress * 100}%` }} />
+          <div 
+            className="absolute h-full bg-yellow-500/50 shadow-[0_0_15px_rgba(245,158,11,0.2)] transition-all" 
+            style={{ width: `${progress * 100}%`, transitionDuration: '1500ms', transitionTimingFunction: PREMIUM_EASE }} 
+          />
+          <div 
+            className="absolute w-3 h-3 bg-white/80 rounded-full top-1/2 -translate-y-1/2 -translate-x-1/2 shadow-lg transition-all" 
+            style={{ left: `${progress * 100}%`, transitionDuration: '1500ms', transitionTimingFunction: PREMIUM_EASE }} 
+          />
         </div>
       </div>
     </div>

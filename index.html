@@ -49,13 +49,23 @@
         }
         
         @keyframes gold-pulse {
-            0%, 100% { filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.2)); transform: scale(1); }
-            50% { filter: drop-shadow(0 0 35px rgba(255, 215, 0, 0.5)); transform: scale(1.02); }
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1)); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.2)); transform: scale(1.01); }
         }
-        .totality-glow { animation: gold-pulse 6s infinite ease-in-out; }
+        .totality-glow { animation: gold-pulse 8s infinite ease-in-out; }
+
+        @keyframes ethereal-pulse {
+            0%, 100% { opacity: 0.7; transform: scale(1); filter: blur(40px); }
+            50% { opacity: 0.9; transform: scale(1.05); filter: blur(55px); }
+        }
+        .corona-pulse { animation: ethereal-pulse 12s infinite ease-in-out; }
         
-        .animate-content { animation: contentIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        @keyframes contentIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* New Premium Easing: Ease Out Quint for silk-like motion */
+        .animate-content { animation: contentIn 1.4s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+        @keyframes contentIn { 
+            from { opacity: 0; transform: translateY(15px) scale(0.98); filter: blur(4px); } 
+            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } 
+        }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
