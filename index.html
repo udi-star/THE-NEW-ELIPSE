@@ -2,14 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Ibiza Eclipse Storyline</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eclipse Experience Widget</title>
     
-    <meta name="theme-color" content="#000000">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="manifest.json">
-
     <!-- CSS Framework & Premium Typography -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -23,40 +18,17 @@
     </script>
 
     <style>
-        body, html { 
+        /* Scoped to prevent theme interference */
+        .eclipse-widget-container { 
             background: #000; 
             color: #fff; 
             font-family: 'Inter', sans-serif; 
-            margin: 0; 
-            padding: 0;
             overflow: hidden; 
-            height: 100%;
+            position: relative;
             width: 100%;
             -webkit-tap-highlight-color: transparent; 
         }
         .serif { font-family: 'Playfair Display', serif; }
-        
-        /* Initial boot loader styling */
-        #boot-loader {
-            position: fixed;
-            inset: 0;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .solar-ring {
-            width: 50px;
-            height: 50px;
-            border: 1px solid rgba(255, 215, 0, 0.1);
-            border-top: 2px solid #FFD700;
-            border-radius: 50%;
-            animation: rotate 2s linear infinite;
-        }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         
         .star { 
             position: absolute; 
@@ -67,19 +39,18 @@
         }
         
         @keyframes gold-pulse {
-            0%, 100% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.3)); transform: scale(1); }
-            50% { filter: drop-shadow(0 0 50px rgba(255, 215, 0, 0.7)); transform: scale(1.02); }
+            0%, 100% { filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.2)); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 35px rgba(255, 215, 0, 0.5)); transform: scale(1.02); }
         }
         .totality-glow { animation: gold-pulse 6s infinite ease-in-out; }
         
-        .animate-content { animation: contentIn 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        @keyframes contentIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-content { animation: contentIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        @keyframes contentIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        /* Interactive range reset */
         input[type=range] { -webkit-appearance: none; background: transparent; width: 100%; cursor: pointer; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 60px; width: 60px; background: transparent; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 40px; width: 40px; background: transparent; }
     </style>
 <script type="importmap">
 {
@@ -89,38 +60,13 @@
 }
 </script>
 </head>
-<body>
-    <div id="boot-loader">
-        <div class="solar-ring mb-6"></div>
-        <p class="serif italic text-white/40 tracking-[.3em] text-[10px] uppercase">Ibiza Total Solar</p>
+<body style="margin: 0; padding: 0; background: #f4f4f4;">
+    <!-- Shopify Section Placeholder -->
+    <div style="max-width: 1200px; margin: 40px auto; padding: 0 20px;">
+        <div id="root" class="eclipse-widget-container rounded-xl shadow-2xl"></div>
     </div>
 
-    <div id="root"></div>
-
-    <!-- Main App Script: data-type="module" is critical for browser-side imports -->
+    <!-- Main App Script -->
     <script type="text/babel" data-type="module" src="./index.tsx" data-presets="react,typescript"></script>
-    
-    <script>
-        // Transition from boot loader to application after mount
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const loader = document.getElementById('boot-loader');
-                if (loader) {
-                    loader.style.opacity = '0';
-                    setTimeout(() => loader.remove(), 1200);
-                }
-            }, 2500);
-        });
-
-        // PWA Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                const swUrl = './sw.js';
-                navigator.serviceWorker.register(swUrl, { scope: './' })
-                    .then(reg => console.log('Solar Journey Active'))
-                    .catch(err => console.warn('Offline mode unavailable:', err.message));
-            });
-        }
-    </script>
 </body>
 </html>
