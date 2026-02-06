@@ -129,7 +129,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="relative w-full aspect-[16/10] md:aspect-[16/9] bg-black overflow-hidden select-none font-light text-white tracking-widest flex flex-col justify-center">
+    <div className="relative w-screen h-screen bg-black overflow-hidden select-none font-light text-white tracking-widest flex flex-col justify-center">
       
       {/* Background Stars */}
       <div className="absolute inset-0 z-0 opacity-25">
@@ -146,7 +146,7 @@ const App = () => {
       </div>
 
       {/* Control Overlay */}
-      <div className="absolute top-4 right-4 z-20">
+      <div className="absolute top-6 right-6 z-20">
         <button 
           onClick={() => setPlaying(!playing)} 
           className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 bg-white/[0.05] backdrop-blur-xl flex items-center justify-center hover:bg-white/[0.15] transition-all"
@@ -163,52 +163,52 @@ const App = () => {
       </div>
 
       {/* Main Content Cluster */}
-      <div className="relative z-10 px-6 md:px-12 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
-        <div className="shrink-0 scale-75 md:scale-100">
+      <div className="relative z-10 px-6 md:px-12 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
+        <div className="shrink-0 scale-90 md:scale-110 lg:scale-125">
           <EclipseVisual progress={progress} />
         </div>
 
         <div key={currentPhase} className="max-w-md md:text-left text-center animate-content">
-          <h2 className="serif text-xl md:text-3xl lg:text-4xl mb-3 md:mb-5 leading-tight font-light text-white/95">
+          <h2 className="serif text-2xl md:text-3xl lg:text-5xl mb-4 md:mb-6 leading-tight font-light text-white/95">
             {activeData?.sentence}
           </h2>
           
-          <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4 md:mb-6">
+          <div className="flex flex-wrap justify-center md:justify-start gap-2.5 mb-6 md:mb-8">
             {(activeData?.feeling || "").split(',').map((f, i) => (
-              <span key={i} className="text-[8px] uppercase tracking-[.3em] text-yellow-500/80 px-3 py-1 border border-yellow-500/10 rounded-full bg-white/[0.03]">
+              <span key={i} className="text-[9px] uppercase tracking-[.3em] text-yellow-500/80 px-4 py-1.5 border border-yellow-500/10 rounded-full bg-white/[0.03] backdrop-blur-sm">
                 {f.trim()}
               </span>
             ))}
           </div>
           
-          <p className="text-white/30 italic text-xs md:text-sm max-w-sm border-t border-white/5 pt-3 md:pt-4 font-light leading-relaxed">
+          <p className="text-white/30 italic text-sm md:text-base max-w-sm border-t border-white/5 pt-4 md:pt-6 font-light leading-relaxed">
             {activeData?.reflection}
           </p>
         </div>
       </div>
 
       {/* Compact Timeline Footer */}
-      <div className="absolute bottom-4 left-6 right-6 z-20">
-        <div className="flex justify-between mb-2 overflow-x-auto no-scrollbar gap-4 px-1">
+      <div className="absolute bottom-8 left-8 right-8 z-20 max-w-4xl mx-auto w-[calc(100%-4rem)]">
+        <div className="flex justify-between mb-4 overflow-x-auto no-scrollbar gap-6 px-1">
           {PHASES.map((k, i) => (
             <button 
               key={k} 
               onClick={() => {setProgress(i / (PHASES.length - 1)); setPlaying(false);}} 
-              className={`text-[8px] uppercase tracking-[.2em] transition-all duration-500 ${i === currentIdx ? 'text-white font-bold opacity-100' : 'text-white/20 hover:text-white/50'}`}
+              className={`text-[9px] uppercase tracking-[.25em] transition-all duration-500 ${i === currentIdx ? 'text-white font-bold opacity-100' : 'text-white/20 hover:text-white/50'}`}
             >
               {PHASE_LABELS[k]}
             </button>
           ))}
         </div>
         
-        <div className="relative h-[1px] w-full bg-white/[0.1] group cursor-pointer">
+        <div className="relative h-[1px] w-full bg-white/[0.1] group cursor-pointer transition-colors duration-500 hover:bg-white/[0.2]">
           <input 
             type="range" min="0" max="1" step="0.000001" value={progress} 
             onInput={e => {setProgress(parseFloat(e.currentTarget.value)); setPlaying(false);}} 
-            className="absolute -top-3 left-0 w-full h-6 opacity-0 z-20" 
+            className="absolute -top-4 left-0 w-full h-10 opacity-0 z-20" 
           />
-          <div className="absolute h-full bg-yellow-500/60 shadow-[0_0_10px_rgba(245,158,11,0.3)]" style={{ width: `${progress * 100}%` }} />
-          <div className="absolute w-3 h-3 bg-white rounded-full top-1/2 -translate-y-1/2 -translate-x-1/2" style={{ left: `${progress * 100}%` }} />
+          <div className="absolute h-full bg-yellow-500/70 shadow-[0_0_15px_rgba(245,158,11,0.4)]" style={{ width: `${progress * 100}%` }} />
+          <div className="absolute w-3.5 h-3.5 bg-white rounded-full top-1/2 -translate-y-1/2 -translate-x-1/2 shadow-lg" style={{ left: `${progress * 100}%` }} />
         </div>
       </div>
     </div>
